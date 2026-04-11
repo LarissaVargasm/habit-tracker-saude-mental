@@ -2,55 +2,78 @@ import json
 import os
 
 class HabitTracker:
-    def __init__(self, storage_path="habits.json"):
-        self.storage_path = storage_path
-        self.habits = self._load_data()
+    def __init__(self, filename="habits.json"):
+        self.filename = filename
+        self.habits = self._load_habits()
 
-    def _load_data(self):
-        if os.path.exists(self.storage_path):
-            with open(self.storage_path, 'r', encoding='utf-8') as f:
+    def _load_habits(self):
+        if os.path.exists(self.filename):
+            with open(self.filename, 'r', encoding='utf-8') as f:
                 try:
-                    return json.load(f)
-                except json.JSONDecodeError:
-                    return {}
-        return {}
+                    data = json.load(f)
+                    if isinstance(data, list):
+                        return [h for h in data if isinstance(h, dict)]
+                except:
+                    return []
+        return []
 
-    def _save_data(self):
-        with open(self.storage_path, 'w', encoding='utf-8') as f:
-            json.dump(self.habits, f, indent=4, ensure_ascii=False)
+    def _save_habits(self):
+        with open(self.filename, 'w', encoding='utf-8') as f:
+            json.dump(self.habits, f, indent=4)
 
     def add_habit(self, name):
-        if not name or name.strip() == "":
-            return "Erro: O nome do hábito não pode ser vazio."
-        if name in self.habits:
-            return f"Erro: O hábito '{name}' já existe."
-        
-        self.habits[name] = {"completed": False}
-        self._save_data()
-        return f"Hábito '{name}' adicionado com sucesso!"
-
-    def edit_habit(self, old_name, new_name):
-        if old_name not in self.habits:
-            return f"Erro: Hábito '{old_name}' não encontrado."
-        if not new_name or new_name.strip() == "":
-            return "Erro: O novo nome não pode ser vazio."
-        
-        data = self.habits.pop(old_name)
-        self.habits[new_name] = data
-        self._save_data()
-        return f"Hábito '{old_name}' alterado para '{new_name}'!"
+        nome_limpo = name.strip()
+        if nome_limpo and not any(h.get('name') == nome_limpo for h in self.habits):
+            self.habits.append({"name": nome_limpo, "completed": False})
+            self._save_habits()
 
     def list_habits(self):
         return self.habits
 
     def complete_habit(self, name):
-        if name in self.habits:
-            self.habits[name]["completed"] = True
-            self._save_data()
-            return f"Boa! Você concluiu: {name}"
-        return "Erro: Hábito não encontrado."
+        nome_busca = name.strip()
+        for h in self.habits:
+            if h.get('name') == nome_busca:
+                h['completed'] = True
+                self._save_habits()
+                return True
+        return False
 
 if __name__ == "__main__":
-    # Apenas para teste manual rápido se quiser rodar o arquivo
     tracker = HabitTracker()
-    print(tracker.add_habit("Beber água"))
+    while True:
+        print("\n🌿 --- HabitTracker: Saúde Mental --- 🌿")
+        print("1. Adicionar Hábito")
+        print("2. Listar Hábitos")
+        print("3. Concluir Hábito")
+        print("4. Sair")
+        
+        opcao = input("\nEscolha uma opção: ")
+
+        if opcao == "1":
+            nome = input("Nome do hábito: ").strip()
+            if nome:
+                tracker.add_habit(nome)
+                print(f"✅ Hábito '{nome}' adicionado!")
+        
+        elif opcao == "2":
+            habitos = tracker.list_habits()
+            print("\n📋 Seus Hábitos:")
+            if not habitos:
+                print("📭 Nenhum hábito encontrado.")
+            else:
+                for h in habitos:
+                    nome_h = h.get('name', 'Hábito sem nome')
+                    status = "✅" if h.get('completed') else "❌"
+                    print(f"- {nome_h} [{status}]")
+        
+        elif opcao == "3":
+            nome = input("Nome do hábito para concluir: ").strip()
+            if tracker.complete_habit(nome):
+                print(f"🌟 Parabéns por cuidar de você! '{nome}' concluído.")
+            else:
+                print(f"⚠️ Hábito '{nome}' não encontrado.")
+            
+        elif opcao == "4":
+            print("Até logo! Cuide-se bem. ✨")
+            break

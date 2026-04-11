@@ -2,41 +2,49 @@ import json
 import os
 
 class HabitTracker:
-    def __init__(self, filename="habits.json"):
-        self.filename = filename
+    def __init__(self, storage_path="habits.json"):
+        self.storage_path = storage_path
         self.habits = self._load_habits()
 
     def _load_habits(self):
-        if os.path.exists(self.filename):
-            with open(self.filename, 'r', encoding='utf-8') as f:
+        if os.path.exists(self.storage_path):
+            with open(self.storage_path, 'r', encoding='utf-8') as f:
                 try:
                     data = json.load(f)
-                    if isinstance(data, list):
-                        return [h for h in data if isinstance(h, dict)]
+                    return data if isinstance(data, dict) else {}
                 except:
-                    return []
-        return []
+                    return {}
+        return {}
 
     def _save_habits(self):
-        with open(self.filename, 'w', encoding='utf-8') as f:
+        with open(self.storage_path, 'w', encoding='utf-8') as f:
             json.dump(self.habits, f, indent=4)
 
     def add_habit(self, name):
-        nome_limpo = name.strip()
-        if nome_limpo and not any(h.get('name') == nome_limpo for h in self.habits):
-            self.habits.append({"name": nome_limpo, "completed": False})
+        if not name:
+            return "Erro: nome vazio"
+        if name in self.habits:
+            return "Erro: hábito já existe"
+        
+        self.habits[name] = {"completed": False}
+        self._save_habits()
+        return "Sucesso: hábito adicionado"
+
+    def edit_habit(self, old_name, new_name):
+        if old_name in self.habits and new_name:
+            self.habits[new_name] = self.habits.pop(old_name)
             self._save_habits()
+            return "Sucesso: hábito alterado"
+        return "Erro: falha ao editar"
 
     def list_habits(self):
         return self.habits
 
     def complete_habit(self, name):
-        nome_busca = name.strip()
-        for h in self.habits:
-            if h.get('name') == nome_busca:
-                h['completed'] = True
-                self._save_habits()
-                return True
+        if name in self.habits:
+            self.habits[name]["completed"] = True
+            self._save_habits()
+            return True
         return False
 
 if __name__ == "__main__":
@@ -46,34 +54,36 @@ if __name__ == "__main__":
         print("1. Adicionar Hábito")
         print("2. Listar Hábitos")
         print("3. Concluir Hábito")
-        print("4. Sair")
+        print("4. Editar Hábito")
+        print("5. Sair")
         
         opcao = input("\nEscolha uma opção: ")
 
         if opcao == "1":
             nome = input("Nome do hábito: ").strip()
-            if nome:
-                tracker.add_habit(nome)
-                print(f"✅ Hábito '{nome}' adicionado!")
+            print(tracker.add_habit(nome))
         
         elif opcao == "2":
             habitos = tracker.list_habits()
             print("\n📋 Seus Hábitos:")
             if not habitos:
                 print("📭 Nenhum hábito encontrado.")
-            else:
-                for h in habitos:
-                    nome_h = h.get('name', 'Hábito sem nome')
-                    status = "✅" if h.get('completed') else "❌"
-                    print(f"- {nome_h} [{status}]")
+            for nome, info in habitos.items():
+                status = "✅" if info["completed"] else "❌"
+                print(f"- {nome} [{status}]")
         
         elif opcao == "3":
             nome = input("Nome do hábito para concluir: ").strip()
             if tracker.complete_habit(nome):
-                print(f"🌟 Parabéns por cuidar de você! '{nome}' concluído.")
+                print("🌟 Parabéns por cuidar de você!")
             else:
-                print(f"⚠️ Hábito '{nome}' não encontrado.")
-            
+                print("⚠️ Hábito não encontrado.")
+
         elif opcao == "4":
-            print("Até logo! Cuide-se bem. ✨")
+            velho = input("Nome atual: ").strip()
+            novo = input("Novo nome: ").strip()
+            print(tracker.edit_habit(velho, novo))
+            
+        elif opcao == "5":
+            print("Até logo! ✨")
             break

@@ -1,6 +1,5 @@
 from src.app import HabitTracker
 import os
-import pytest
 
 def setup_function():
     """Executa antes de cada teste para limpar o arquivo de teste."""

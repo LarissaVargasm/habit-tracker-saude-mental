@@ -12,7 +12,7 @@ class HabitTracker:
                 try:
                     data = json.load(f)
                     return data if isinstance(data, dict) else {}
-                except:
+                except Exception:
                     return {}
         return {}
 
@@ -60,29 +60,29 @@ if __name__ == "__main__":
         opcao = input("\nEscolha uma opção: ")
 
         if opcao == "1":
-            nome = input("Nome do hábito: ").strip()
-            print(tracker.add_habit(nome))
+            nome_hab = input("Nome do hábito: ").strip()
+            print(tracker.add_habit(nome_hab))
         
         elif opcao == "2":
-            habitos = tracker.list_habits()
+            habitos_lista = tracker.list_habits()
             print("\n📋 Seus Hábitos:")
-            if not habitos:
+            if not habitos_lista:
                 print("📭 Nenhum hábito encontrado.")
-            for nome, info in habitos.items():
+            for n, info in habitos_lista.items():
                 status = "✅" if info["completed"] else "❌"
-                print(f"- {nome} [{status}]")
+                print(f"- {n} [{status}]")
         
         elif opcao == "3":
-            nome = input("Nome do hábito para concluir: ").strip()
-            if tracker.complete_habit(nome):
+            nome_c = input("Nome do hábito para concluir: ").strip()
+            if tracker.complete_habit(nome_c):
                 print("🌟 Parabéns por cuidar de você!")
             else:
                 print("⚠️ Hábito não encontrado.")
 
         elif opcao == "4":
-            velho = input("Nome atual: ").strip()
-            novo = input("Novo nome: ").strip()
-            print(tracker.edit_habit(velho, novo))
+            v = input("Nome atual: ").strip()
+            nv = input("Novo nome: ").strip()
+            print(tracker.edit_habit(v, nv))
             
         elif opcao == "5":
             print("Até logo! ✨")

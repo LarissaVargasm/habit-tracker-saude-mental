@@ -1,5 +1,6 @@
 import json
 import os
+from api.motivacional_api import get_motivational_quote
 
 class HabitTracker:
     def __init__(self, storage_path="habits.json"):
@@ -49,8 +50,11 @@ class HabitTracker:
 
 if __name__ == "__main__":
     tracker = HabitTracker()
+    print("\n🌿 Motivação do dia:")
+    print(get_motivational_quote())
+
     while True:
-        print("\n🌿 --- HabitTracker: Saúde Mental --- 🌿")
+        print("\n🌿 -- HabitTracker: Saúde Mental -- 🌿")
         print("1. Adicionar Hábito")
         print("2. Listar Hábitos")
         print("3. Concluir Hábito")

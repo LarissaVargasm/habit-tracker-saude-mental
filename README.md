@@ -32,7 +32,6 @@ Essas mesmas frases serão traduzidas automaticamente para português utilizando
 
 
 ## 📦 Como executar
-
 ### Instalar dependências
 ```bash
 pip install -r requirements.txt

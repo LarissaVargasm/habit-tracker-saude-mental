@@ -49,5 +49,5 @@ python -m pytest
 ```
 
 ---
-**Versão:** 1.0.0 
+**Versão:** 1.1.0 
 **Autora:** Larissa Vargas Moreira

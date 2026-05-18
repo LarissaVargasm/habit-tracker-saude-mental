@@ -47,6 +47,9 @@ python src/app.py
 ```bash
 python -m pytest
 ```
+## 🌐 Aplicação Online
+
+https://habit-tracker-saude-mental.onrender.com/
 
 ---
 **Versão:** 1.1.0 

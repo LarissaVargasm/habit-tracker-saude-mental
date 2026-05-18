@@ -10,12 +10,21 @@ Em um mundo cada vez mais acelerado, a negligência com a saúde mental tornou-s
 - **Qualidade:** Ruff (Linting)
 - **Testes:** Pytest
 - **CI/CD:** GitHub Actions
+- **API:** ZenQuotes API
+- **Tradução:** Deep Translator
 
 ## 🚀 Funcionalidades
 - **Adicionar Hábito:** Registre novas atividades focadas em saúde (ex: Meditar, Beber Água).
 - **Editar Hábito:** Ajuste suas metas de forma flexível.
 - **Listar:** Visualize seu progresso diário.
 - **Concluir:** Marque hábitos realizados para te lembrar dessa conquita.
+- **Frases Motivacionais:** Exibição automática de frases motivacionais traduzidas para português através de integração com API pública.
+
+## 🌐 Integração com API
+
+O projeto utiliza a API pública ZenQuotes para buscar frases motivacionais em tempo real.
+Essas mesmas frases serão traduzidas automaticamente para português utilizando a biblioteca Deep Translator.
+
 
 ## 🛠️ Qualidade Técnica
 - **Testes Automatizados:** Cobertura de funções principais via Pytest.
@@ -23,8 +32,21 @@ Em um mundo cada vez mais acelerado, a negligência com a saúde mental tornou-s
 
 
 ## 📦 Como executar
-1. Instale as dependências: `pip install -r requirements.txt`
-2. Execute os testes: `pytest`
+
+### Instalar dependências
+```bash
+pip install -r requirements.txt
+```
+
+### Executar aplicação
+```bash
+python src/app.py
+```
+
+### Executar testes
+```bash
+python -m pytest
+```
 
 ---
 **Versão:** 1.0.0 

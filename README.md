@@ -31,7 +31,7 @@ Essas mesmas frases serão traduzidas automaticamente para português utilizando
 - **Linting:** Código analisado pelo Ruff para garantir padrões profissionais.
 
 
-## Como executar
+## 📦 Como executar
 
 ### Instalar dependências
 ```bash
